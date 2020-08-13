@@ -1,17 +1,18 @@
 const express = require('express');
-const MongoClient = require('mongodb');
+const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors')
 require('dotenv/config');
 
-const app = express();
-
-const port = 8000;
-
-app.use(bodyParser.urlencoded({ extended: true }));
+// Middlewares
+app.use(cors())
 app.use(bodyParser.json());
 
-require('./app/routes/')(app, {});
+// import routes
+const postsRoute = require('./routes/posts')
+
+app.use('/posts', postsRoute)
 
 // Connect to DB
 mongoose.connect(
@@ -25,6 +26,7 @@ mongoose.connect(
   }
 )
 
+const port = 8000;
 app.listen(port, () => {
   console.log(`We are live on port ${port}`)
 });
